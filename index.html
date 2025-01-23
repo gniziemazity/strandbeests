@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Strandbeest Experiment</title>
+      <style>
+         body {
+            text-align: center;
+         }
+         canvas {
+            border: 1px solid;
+         }
+      </style>
+   </head>
+   <body>
+      <canvas id="canvas" width="1050" height="500"></canvas>
+      <script src="utils.js"></script>
+      <script src="stick.js"></script>
+      <script src="particle.js"></script>
+      <script src="motor.js"></script>
+      <script src="vector.js"></script>
+      <script src="leg.js"></script>
+      <script>
+         const GRAVITY = new Vector(0, 0.1);
+         const ctx = canvas.getContext("2d");
+
+         const a = 38.0,
+            b = 41.5,
+            c = 39.3,
+            d = 40.1,
+            e = 55.8,
+            f = 39.4,
+            g = 36.7,
+            h = 65.7,
+            i = 49.0,
+            j = 50.0,
+            k = 61.9,
+            l = 7.8,
+            m = 15.0;
+
+         const leg = new Leg(400, 200, a, b, c, d, e, f, g, h, i, j, k, l, m);
+         leg.calibrate(GRAVITY, canvas);
+         const legTipPath = [];
+
+         animate();
+
+         function animate() {
+            leg.update(GRAVITY, canvas);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const tipLocation = leg.getTipLocation();
+            legTipPath.push(tipLocation);
+
+            ctx.save();
+            ctx.beginPath();
+
+            for (const point of legTipPath) {
+               ctx.lineTo(point.x, point.y);
+            }
+            ctx.stroke();
+
+            leg.draw(ctx);
+
+            ctx.restore();
+
+            requestAnimationFrame(animate);
+         }
+      </script>
+   </body>
+</html>
