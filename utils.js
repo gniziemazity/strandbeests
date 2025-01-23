@@ -13,3 +13,19 @@ function average(a, b) {
 function lerp(a, b, t) {
    return a + (b - a) * t;
 }
+
+function computeArea(path){
+   let sum=0;
+   for(let i=0;i<path.length-1;i++){
+      sum+=path[i].x*path[i+1].y-path[i+1].x*path[i].y;
+   }
+   return Math.abs(sum/2);
+}
+
+function computeLength(path){
+   let sum=0;
+   for(let i=0;i<path.length-1;i++){
+      sum+=dist(path[i],path[i+1]);
+   }
+   return sum;
+}
