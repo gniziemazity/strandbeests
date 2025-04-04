@@ -51,7 +51,8 @@ class Statistics {
       ctx.lineWidth = 2;
       this.bottomPointPaths.forEach((path, index) => {
          const score = this.scores[index];
-         ctx.strokeStyle = `hsl(${score * 360}, 100%, 50%)`;
+         const hue=120+360-360*score;
+         ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
          ctx.beginPath();
          path.forEach((point, i) => {
             if (i === 0) {
