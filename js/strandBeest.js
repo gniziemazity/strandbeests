@@ -13,13 +13,17 @@ class StrandBeest {
       const leftLegs = [];
       for (let i = 0; i < leftLegCount; i++) {
          const angle = (i * 2 * Math.PI) / 3;
-         leftLegs.push(new Leg(originVector, givenLengths, angle, false, staticSupport));
+         leftLegs.push(
+            new Leg(originVector, givenLengths, angle, false, staticSupport)
+         );
       }
 
       const rightLegs = [];
       for (let i = 0; i < rightLegCount; i++) {
          const angle = (i * 2 * Math.PI) / 3;
-         rightLegs.push(new Leg(originVector, givenLengths, angle, true, staticSupport));
+         rightLegs.push(
+            new Leg(originVector, givenLengths, angle, true, staticSupport)
+         );
       }
 
       this.legs = [...leftLegs, ...rightLegs];
@@ -78,7 +82,7 @@ class StrandBeest {
       this.disqualified = false;
    }
 
-   getBottomPoints(){
+   getBottomPoints() {
       return this.legs.flatMap((leg) => leg.getEndpoints().bottom);
    }
 
@@ -96,5 +100,6 @@ class StrandBeest {
       const objects = [...particles, ...sticks];
       objects.forEach((object) => {
          object.draw(ctx);
-      });   }
+      });
+   }
 }

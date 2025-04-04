@@ -80,7 +80,7 @@
             attachToWall,
          );
 
-         let strandBeests = generateStrandBeests(spacing, parentStrandBeest);
+         let strandBeests = generateStrandBeests(spacing);
 
          let statistics = new Statistics(strandBeests, speed);
 
@@ -104,8 +104,9 @@
 
          function nextRound() {
             const scores = statistics.scores;
-            const maxScore = Math.max(...scores);
-            const bestStrandBeest = strandBeests[scores.indexOf(maxScore)];
+            const filteredScores= scores.filter((score) => isNaN(score) === false);
+            const maxScore = Math.max(...filteredScores);
+            const bestStrandBeest = strandBeests[filteredScores.indexOf(maxScore)];
             strandBeests = generateStrandBeests(spacing, bestStrandBeest);
             statistics = new Statistics(strandBeests, speed);
          }

@@ -13,7 +13,7 @@ class Statistics {
             this.bottomPointPaths[i] = [];
          }
          const strandBeest = this.strandBeests[i];
-         if (this.bottomPointPaths[i].length <2* Math.PI / this.speed) {
+         if (this.bottomPointPaths[i].length < (2 * Math.PI) / this.speed) {
             this.bottomPointPaths[i].push(strandBeest.getBottomPoints()[0].loc);
          }
       }
@@ -31,7 +31,6 @@ class Statistics {
             x: path.map((p) => p.x).reduce((a, b) => a + b, 0) / path.length,
             y: path.map((p) => p.y).reduce((a, b) => a + b, 0) / path.length,
          };
-      
 
          const yOffset =
             1 - (bounds.maxY - centerOfMass.y) / (bounds.maxY - bounds.minY);
@@ -42,7 +41,7 @@ class Statistics {
          const roundness = area / areaOfCircle;
          // roundness is between 0 and 1, 1 being a perfect circle
          // yOffset is between 0 and 1, bigger is better
-         return area;
+         return roundness ** 4 + yOffset;
       });
    }
 
