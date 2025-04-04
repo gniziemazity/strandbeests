@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Strandbeest Experiment</title>
+      <style>
+         body {
+            text-align: center;
+         }
+         canvas {
+            border: 1px solid;
+         }
+      </style>
+   </head>
+   <body>
+      <canvas id="canvas" width="1050" height="500"></canvas>
+      <br />
+      <input
+         type="range"
+         id="mutationRate"
+         min="0"
+         max="1"
+         step="0.01"
+         value="0.1"
+      />
+      <button id="nextRoundBtn" onclick="nextRound()">Next Round</button>
+      <script src="js/utils.js"></script>
+      <script src="js/stick.js"></script>
+      <script src="js/particle.js"></script>
+      <script src="js/lever.js"></script>
+      <script src="js/motor.js"></script>
+      <script src="js/vector.js"></script>
+      <script src="js/leg.js"></script>
+      <script src="js/strandBeest.js"></script>
+      <script src="js/physics.js"></script>
+      <script src="js/genetic.js"></script>
+      <script src="js/statistics.js"></script>
+      <script>
+         const ctx = canvas.getContext("2d");
+
+         const min = 35;
+         const max = 65;
+         const spacing = 100;
+
+         const useMotor = true;
+         const gravity = new Vector(0, 1);
+         const wind = new Vector(0, 0);
+
+         const physics = new Physics(gravity, wind);
+
+         const origin = new Vector(canvas.width / 2, canvas.height * 0.8);
+
+         const givenLengths = {
+            a: 38.0,
+            b: 41.5,
+            c: 39.3,
+            d: 40.1,
+            e: 55.8,
+            f: 39.4,
+            g: 36.7,
+            h: 65.7,
+            i: 49.0,
+            j: 50.0,
+            k: 61.9,
+            l: 7.8,
+            m: 15.0,
+         };
+
+         const speed = Math.PI / 100;
+         const leftLegCount = 1;
+         const rightLegCount = 0;
+         const attachToWall = true;
+
+         const parentStrandBeest = new StrandBeest(
+            origin,
+            givenLengths,
+            useMotor,
+            speed,
+            leftLegCount,
+            rightLegCount,
+            attachToWall,
+         );
+
+         let strandBeests = generateStrandBeests(spacing, parentStrandBeest);
+
+         let statistics = new Statistics(strandBeests, speed);
+
+
+         animate();
+
+         function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            physics.update(strandBeests, canvas.width, canvas.height);
+            statistics.update();
+
+            for (const strandBeest of strandBeests) {
+               strandBeest.draw(ctx);
+            }
+
+            statistics.drawPaths(ctx);
+
+            requestAnimationFrame(animate);
+         }
+
+         function nextRound() {
+            const scores = statistics.scores;
+            const maxScore = Math.max(...scores);
+            const bestStrandBeest = strandBeests[scores.indexOf(maxScore)];
+            strandBeests = generateStrandBeests(spacing, bestStrandBeest);
+            statistics = new Statistics(strandBeests, speed);
+         }
+      </script>
+   </body>
+</html>
