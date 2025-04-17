@@ -60,10 +60,14 @@ class StrandBeest {
       this.sticks = [];
       for (let i = 0; i < leftLegs.length; i++) {
          for (let j = i + 1; j < leftLegs.length; j++) {
+            const p1=leftLegs[i].getEndpoints().tip;
+            const p2=leftLegs[j].getEndpoints().tip;
+            p1.loc.z = leftLegs[i].zOffset;
+            p2.loc.z = leftLegs[j].zOffset;
             this.sticks.push(
                new Stick(
-                  leftLegs[i].getEndpoints().tip,
-                  leftLegs[j].getEndpoints().tip,
+                  p1,
+                  p2,
                   0x0000ff
                )
             );
@@ -116,13 +120,16 @@ class StrandBeest {
             particles[i].draw3D(scene);
          }
 
-         const sticks = Object.values(leg.sticks).concat(this.sticks);
+         const sticks = Object.values(leg.sticks);
         
          for(let i=0;i<sticks.length;i++){
             sticks[i].p1.loc.z = leg.zOffset;
             sticks[i].p2.loc.z = leg.zOffset;
             sticks[i].draw3D(scene);
          }
+      }
+      for(let i=0;i<this.sticks.length;i++){
+          this.sticks[i].draw3D(scene);
       }
    }
 }

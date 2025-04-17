@@ -51,11 +51,11 @@
          const {width, height}=canvas;
          const ctx = canvas.getContext("2d");
 
-         const center=new Vector(width * 0.5, height * 0.5);
+         const lookAt3D=new Vector(width * 0.5, height * 0.6);
          const originVector = new Vector(width * 0.3, height * 0.8);
 
          const container = document.getElementById('container');
-         const scene3D = new Scene(container,width,height,center);
+         const scene3D = new Scene(container,width,height,lookAt3D);
          let use3D = true;
          const toggle3D = document.getElementById('use3D');
 

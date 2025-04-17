@@ -8,7 +8,7 @@ class Scene {
    ) {
       // Scene setup
       this.scene = new THREE.Scene();
-      this.scene.background = new THREE.Color(0xe0e0e0);
+      this.scene.background = new THREE.Color(0xffffff);
 
       // Camera setup
       this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
