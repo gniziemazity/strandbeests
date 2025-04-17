@@ -10,8 +10,8 @@ class Motor {
       this.levers = [];
    }
 
-   // tip is a particle
-   addLever(tip, angleOffset = 0) {
+   addLever(segment, angleOffset = 0) {
+      const tip = segment.p2;
       const lever = new Lever(this.origin, tip, this.angle + angleOffset);
       this.levers.push(lever);
    }

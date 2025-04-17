@@ -1,9 +1,11 @@
 class Particle {
+   static ID=0;
    constructor(loc, isStatic = false) {
       this.loc = loc;
       this.oldLoc = loc;
       this.isStatic = isStatic;
       this.isConstrained = false; // for drawing purposes
+      this.id = Particle.ID++;
    }
 
    update(force) {
@@ -37,5 +39,10 @@ class Particle {
          ctx.fillStyle = "black";
       }
       ctx.fill();
+   }
+
+   draw3D(scene) {
+      const index = this.id;
+      scene.addParticle(this,index);
    }
 }

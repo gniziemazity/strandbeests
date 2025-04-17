@@ -1,9 +1,12 @@
 class Stick {
-   constructor(p1, p2) {
+   static ID=0;
+   constructor(p1, p2, color = 0xaaaaaa) {
       this.p1 = p1;
       this.p2 = p2;
       this.len = dist(p1.loc, p2.loc);
+      this.color = color;
       this.intersected = false; // for drawing purposes
+      this.id = Stick.ID++;
    }
 
    error() {
@@ -71,9 +74,7 @@ class Stick {
    }
 
    draw3D(scene) {
-      scene.addStick(
-         this.p1.loc, 
-         this.p2.loc
-      );
+      const index = this.id;
+      scene.addStick(this.p1.loc, this.p2.loc,index, this.color );
    }
 }

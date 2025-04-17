@@ -8,6 +8,8 @@
          }
          canvas {
             border: 1px solid;
+            display:none;
+            text-align: center;
          }
          #container {
             width: 1050px;
@@ -41,14 +43,19 @@
 
       <!-- Three.js libraries -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-      
+      <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+
+      <!-- Our 3D scene manager -->
       <script src="js/Scene.js"></script>
       <script>
          const {width, height}=canvas;
          const ctx = canvas.getContext("2d");
 
+         const center=new Vector(width * 0.5, height * 0.5);
+         const originVector = new Vector(width * 0.3, height * 0.8);
+
          const container = document.getElementById('container');
-         const scene3D = new Scene(container,width,height);
+         const scene3D = new Scene(container,width,height,center);
          let use3D = true;
          const toggle3D = document.getElementById('use3D');
 
@@ -58,12 +65,11 @@
 
          const physics = new Physics(gravity, wind);
 
-         const origin = new Vector(width / 2, height * 0.8);
          
          const speed = 0.02;
 
          const strandBeest = new StrandBeest(
-            origin,
+            originVector,
             {
                a: 38.0,
                b: 41.5,
@@ -87,21 +93,19 @@
          
          toggle3D.addEventListener('change', function() {
             use3D = this.checked;
-            canvas.style.display = use3D ? 'none' : 'block';
+            canvas.style.display = use3D ? 'none' : 'inline';
             container.style.display = use3D ? 'block' : 'none';
          });
          function animate() {
-           //if (use3D) {
-           
-               scene3D.clearBeest();
+           if (use3D) {
                physics.update([strandBeest], canvas.width, canvas.height);
                strandBeest.draw3D(scene3D);
                scene3D.render();
-           // } else {
+            } else {
                ctx.clearRect(0, 0, canvas.width, canvas.height);
                physics.update([strandBeest], canvas.width, canvas.height);
                strandBeest.draw(ctx);
-          //  }
+            }
 
             requestAnimationFrame(animate);
          }

@@ -4,15 +4,20 @@ class StrandBeest {
       givenLengths,
       useMotor = false,
       speed,
-      leftLegCount = 3,
-      rightLegCount = 3,
-      staticSupport = false
+      leftLegCount = 6,
+      rightLegCount = 6,
+      staticSupport = false,
+      spread = 40
    ) {
       this.givenLengths = givenLengths;
 
+      const getAngle = (i) => (i * (2 * Math.PI)) / 3;
+      const getZOffset = (i) => Math.floor(i-leftLegCount/2);
       const leftLegs = [];
       for (let i = 0; i < leftLegCount; i++) {
-         const angle = (i * 2 * Math.PI) / 3;
+         const angle = getAngle(i);
+         const zOffset = getZOffset(i);
+         originVector.z = zOffset * spread;
          leftLegs.push(
             new Leg(originVector, givenLengths, angle, false, staticSupport)
          );
@@ -20,7 +25,9 @@ class StrandBeest {
 
       const rightLegs = [];
       for (let i = 0; i < rightLegCount; i++) {
-         const angle = (i * 2 * Math.PI) / 3;
+         const angle = getAngle(i);
+         const zOffset = getZOffset(i);
+         originVector.z = zOffset * spread;
          rightLegs.push(
             new Leg(originVector, givenLengths, angle, true, staticSupport)
          );
@@ -33,33 +40,31 @@ class StrandBeest {
 
       const { p0, p1, p2, p3 } = leftLegs[0].getEndpoints();
 
-      [1, 2].forEach((i) => {
-         if (leftLegs.length > i) {
-            leftLegs[i].setEndpoints({ p0, p1, p2 });
-         }
-      });
-
       if (rightLegs.length > 0) {
          rightLegs[0].setEndpoints({ p0, p1, p3 });
+      }
+      for (let i = 1; i < leftLegs.length; i++) {
+         leftLegs[i].setEndpoints({ p0, p1, p2 });
 
-         const endPoints = rightLegs[0].getEndpoints();
+         if (rightLegs.length > 0) {
+            const endPoints = rightLegs[0].getEndpoints();
 
-         [1, 2].forEach((i) => {
             rightLegs[i].setEndpoints({
                ...endPoints,
                p3: leftLegs[i].getEndpoints().p3,
             });
-         });
+         }
       }
 
-      // keeping levers at fixed angles
+      // extra stiks to levers at fixed angles
       this.sticks = [];
       for (let i = 0; i < leftLegs.length; i++) {
          for (let j = i + 1; j < leftLegs.length; j++) {
             this.sticks.push(
                new Stick(
                   leftLegs[i].getEndpoints().tip,
-                  leftLegs[j].getEndpoints().tip
+                  leftLegs[j].getEndpoints().tip,
+                  0x0000ff
                )
             );
          }
@@ -69,14 +74,14 @@ class StrandBeest {
          this.motor = new Motor(originParticle, speed);
 
          for (let i = 0; i < leftLegs.length; i++) {
-            const leftLegEndpoints = leftLegs[i].getEndpoints();
+            const mStick = leftLegs[i].sticks["m"];
             const angle = (i * 2 * Math.PI) / 3;
-            this.motor.addLever(leftLegEndpoints.tip, angle);
+            this.motor.addLever(mStick, angle);
          }
          for (let i = 0; i < rightLegs.length; i++) {
-            const rightLegEndpoints = rightLegs[i].getEndpoints();
+            const mStick = rightLegs[i].sticks["m"];
             const angle = (i * 2 * Math.PI) / 3;
-            this.motor.addLever(rightLegEndpoints.tip, angle);
+            this.motor.addLever(mStick, angle);
          }
       }
       this.disqualified = false;
@@ -104,22 +109,20 @@ class StrandBeest {
    }
 
    draw3D(scene) {
-      const { particles, sticks } = this.getMovingParts();
-      
-      // Draw all sticks in 3D
-      sticks.forEach(stick => {
-         stick.draw3D(scene);
-      });
-      
-      /*
-      // Optionally, visualize particles as small spheres
-      // particles.forEach(particle => {
-      //    particle.draw3D(scene);
-      // });
-      
-      // Draw motor if it exists
-      if (this.motor) {
-         this.motor.draw3D(scene);
-      }*/
+      for (const leg of this.legs) {
+         const particles = leg.particles;
+         for(let i=0;i<particles.length;i++){
+            particles[i].loc.z = leg.zOffset;
+            particles[i].draw3D(scene);
+         }
+
+         const sticks = Object.values(leg.sticks).concat(this.sticks);
+        
+         for(let i=0;i<sticks.length;i++){
+            sticks[i].p1.loc.z = leg.zOffset;
+            sticks[i].p2.loc.z = leg.zOffset;
+            sticks[i].draw3D(scene);
+         }
+      }
    }
 }

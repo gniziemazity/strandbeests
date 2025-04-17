@@ -7,6 +7,7 @@ class Leg {
       staticSupport = false
    ) {
       this.originVector = originVector;
+      this.zOffset=this.originVector.z;
 
       this.#generateLeg(
          this.originVector,
@@ -20,6 +21,7 @@ class Leg {
       this.discarded = false;
    }
 
+   // Pieter's implementation
    // a, b, c, d, e, f, g, h, i, j, k, l, m come from diagram
    // n comes later
    #generateCoordinates(originVector, givenLengths, direction, rotation) {
@@ -116,7 +118,7 @@ class Leg {
          j: new Stick(this.particles[3], this.particles[4]),
          k: new Stick(this.particles[3], this.particles[6]),
          l: new Stick(this.particles[0], this.particles[1]),
-         m: new Stick(this.particles[1], this.particles[3]),
+         m: new Stick(this.particles[1], this.particles[3], 0xff0000),
          n: new Stick(this.particles[1], this.particles[2]),
       };
    }
@@ -143,7 +145,7 @@ class Leg {
          this.sticks["k"] = new Stick(this.particles[3], this.particles[6]);
       }
 
-      this.sticks["m"] = new Stick(this.particles[1], this.particles[3]);
+      this.sticks["m"] = new Stick(this.particles[1], this.particles[3], 0xff0000);
    }
 
    getEndpoints() {
