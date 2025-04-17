@@ -9,10 +9,25 @@
          canvas {
             border: 1px solid;
          }
+         #container {
+            width: 1050px;
+            height: 500px;
+            margin: 0 auto;
+            position: relative;
+         }
+         #controls {
+            margin: 10px;
+         }
       </style>
    </head>
    <body>
+      <div id="controls">
+         <label>
+            <input type="checkbox" id="use3D" checked> Use 3D Visualization
+         </label>
+      </div>
       <canvas id="canvas" width="1050" height="500"></canvas>
+      <div id="container"></div>
 
       <script src="js/utils.js"></script>
       <script src="js/stick.js"></script>
@@ -23,8 +38,19 @@
       <script src="js/leg.js"></script>
       <script src="js/strandBeest.js"></script>
       <script src="js/physics.js"></script>
+
+      <!-- Three.js libraries -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      
+      <script src="js/Scene.js"></script>
       <script>
+         const {width, height}=canvas;
          const ctx = canvas.getContext("2d");
+
+         const container = document.getElementById('container');
+         const scene3D = new Scene(container,width,height);
+         let use3D = true;
+         const toggle3D = document.getElementById('use3D');
 
          const useMotor = true;
          const gravity = new Vector(0, 1);
@@ -32,7 +58,7 @@
 
          const physics = new Physics(gravity, wind);
 
-         const origin = new Vector(canvas.width / 2, canvas.height * 0.8);
+         const origin = new Vector(width / 2, height * 0.8);
          
          const speed = 0.02;
 
@@ -58,12 +84,24 @@
          );
 
          animate();
-
+         
+         toggle3D.addEventListener('change', function() {
+            use3D = this.checked;
+            canvas.style.display = use3D ? 'none' : 'block';
+            container.style.display = use3D ? 'block' : 'none';
+         });
          function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            physics.update([strandBeest], canvas.width, canvas.height);
-            strandBeest.draw(ctx);
+           //if (use3D) {
+           
+               scene3D.clearBeest();
+               physics.update([strandBeest], canvas.width, canvas.height);
+               strandBeest.draw3D(scene3D);
+               scene3D.render();
+           // } else {
+               ctx.clearRect(0, 0, canvas.width, canvas.height);
+               physics.update([strandBeest], canvas.width, canvas.height);
+               strandBeest.draw(ctx);
+          //  }
 
             requestAnimationFrame(animate);
          }

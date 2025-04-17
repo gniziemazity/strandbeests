@@ -69,4 +69,11 @@ class Stick {
       ctx.lineWidth = lineWidth;
       ctx.stroke();
    }
+
+   draw3D(scene) {
+      scene.addStick(
+         this.p1.loc, 
+         this.p2.loc
+      );
+   }
 }

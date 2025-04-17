@@ -102,4 +102,24 @@ class StrandBeest {
          object.draw(ctx);
       });
    }
+
+   draw3D(scene) {
+      const { particles, sticks } = this.getMovingParts();
+      
+      // Draw all sticks in 3D
+      sticks.forEach(stick => {
+         stick.draw3D(scene);
+      });
+      
+      /*
+      // Optionally, visualize particles as small spheres
+      // particles.forEach(particle => {
+      //    particle.draw3D(scene);
+      // });
+      
+      // Draw motor if it exists
+      if (this.motor) {
+         this.motor.draw3D(scene);
+      }*/
+   }
 }
